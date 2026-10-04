@@ -1,0 +1,5 @@
+# Prettier already skips everything in .gitignore; these are tracked files it should leave alone.
+package-lock.json
+
+# `next dev` rewrites its block in this file, so reformatting it would create a diff that keeps coming back.
+AGENTS.md
