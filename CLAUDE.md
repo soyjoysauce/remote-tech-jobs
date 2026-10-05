@@ -53,6 +53,13 @@ Node version is pinned in `.nvmrc` (run `nvm use`).
 | `npm run typecheck`    | `next typegen` (generates route types), then `tsc --noEmit` |
 | `npm test`             | Vitest, single run                                          |
 | `npm run test:watch`   | Vitest, watch mode                                          |
+| `npm run db:start`     | Start the local Supabase stack (needs Docker)               |
+| `npm run db:stop`      | Stop the local Supabase stack                               |
+| `npm run db:reset`     | Recreate the local DB from `supabase/migrations` + seed     |
+| `npm run db:types`     | Regenerate `src/lib/supabase/database.types.ts`             |
+| `npm run db:test`      | pgTAP tests in `supabase/tests/database`                    |
+
+After changing a migration, run `db:reset`, `db:test` and `db:types`, and commit the regenerated types; CI fails if they are stale. The local stack uses ports 5532x (API 55321, Postgres 55322, Studio 55323), not the Supabase defaults.
 
 ## Conventions
 

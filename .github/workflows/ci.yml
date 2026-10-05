@@ -1,16 +1,25 @@
 name: CI
 
 on:
+  # Branch pushes are covered by pull_request; without the filter a PR branch would run CI twice.
   push:
+    branches: [main]
   pull_request:
 
 # The workflow only reads the repo, so the token gets no write access.
 permissions:
   contents: read
 
+# A newer push to the same PR cancels the run it replaces. Runs on main are queued instead,
+# so every commit on main ends up with a CI result.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
 
@@ -36,3 +45,38 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # Separate from verify so a schema problem and an app problem show up as different failures,
+  # and so the app checks do not wait for Docker images to download.
+  db:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # Installs the Supabase CLI at the version pinned in package-lock.json.
+      - name: Install
+        run: npm ci
+
+      # Postgres only. The tests and type generation need no auth, storage or API containers.
+      - name: Start database
+        run: npx supabase db start
+
+      # Applies every migration from scratch, then the seed. Fails if a migration does not apply.
+      # `db start` has already applied them once; this runs the command developers use locally.
+      - name: Reset database
+        run: npm run db:reset
+
+      - name: Database tests
+        run: npm run db:test
+
+      # The committed types must match what the migrations produce.
+      - name: Check generated types are current
+        run: |
+          npm run db:types
+          git diff --exit-code -- src/lib/supabase/database.types.ts
