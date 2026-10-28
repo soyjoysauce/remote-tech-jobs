@@ -51,22 +51,39 @@ CI runs the same three steps and fails if the committed types are out of date.
 
 ## Scripts
 
-| Script                 | Purpose                              |
-| ---------------------- | ------------------------------------ |
-| `npm run dev`          | Start the dev server                 |
-| `npm run build`        | Production build                     |
-| `npm run start`        | Serve the production build           |
-| `npm run lint`         | Run ESLint                           |
-| `npm run format`       | Format all files with Prettier       |
-| `npm run format:check` | Check formatting without writing     |
-| `npm run typecheck`    | Generate route types, then run `tsc` |
-| `npm test`             | Run tests once                       |
-| `npm run test:watch`   | Run tests in watch mode              |
-| `npm run db:start`     | Start the local Supabase stack       |
-| `npm run db:stop`      | Stop the local Supabase stack        |
-| `npm run db:reset`     | Recreate the local database          |
-| `npm run db:types`     | Regenerate the database types        |
-| `npm run db:test`      | Run the database (pgTAP) tests       |
+| Script                     | Purpose                                    |
+| -------------------------- | ------------------------------------------ |
+| `npm run dev`              | Start the dev server                       |
+| `npm run build`            | Production build                           |
+| `npm run start`            | Serve the production build                 |
+| `npm run lint`             | Run ESLint                                 |
+| `npm run format`           | Format all files with Prettier             |
+| `npm run format:check`     | Check formatting without writing           |
+| `npm run typecheck`        | Generate route types, then run `tsc`       |
+| `npm test`                 | Run tests once                             |
+| `npm run test:watch`       | Run tests in watch mode                    |
+| `npm run test:integration` | Run tests against the local Supabase stack |
+| `npm run ingest`           | Fetch and store jobs (see Ingestion below) |
+| `npm run db:start`         | Start the local Supabase stack             |
+| `npm run db:stop`          | Stop the local Supabase stack              |
+| `npm run db:reset`         | Recreate the local database                |
+| `npm run db:types`         | Regenerate the database types              |
+| `npm run db:test`          | Run the database (pgTAP) tests             |
+
+## Ingestion
+
+Jobs come from source feeds through one pipeline: fetch, validate, keep remote US-eligible tech roles, then upsert into Postgres. Every run is logged in the `ingestion_runs` table with a count for each step.
+
+```bash
+npm run db:start                                 # the local stack must be running
+npm run ingest -- --source all --dry-run         # fetch and compare, write nothing
+npm run ingest -- --source all                   # fetch and write
+npm run ingest -- --source remotive --force      # ignore Remotive's 6-hour minimum interval
+```
+
+Sources so far: Remotive and Remote OK. Remotive asks for only a few API calls a day, so the script skips it if it ran in the last 6 hours (even if that run failed). A dry run still calls the API.
+
+How it works: `src/lib/ingestion/` (code), `docs/decisions/0007-ingestion-architecture.md` and `0008-dedupe-and-closing-strategy.md` (reasons), `docs/study/` (study guides).
 
 ## Attribution
 

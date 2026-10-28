@@ -26,13 +26,13 @@ isOneToOne: false
                   ]
                 },"ingestion_runs": {
                   Row: {
-                    "closed_count": number,"error": string | null,"fetched_count": number,"finished_at": string | null,"id": number,"inserted_count": number,"source_id": string,"started_at": string,"status": Database["public"]['Enums']["ingestion_run_status"],"updated_count": number
+                    "closed_count": number,"eligible_count": number,"error": string | null,"fetched_count": number,"finished_at": string | null,"id": number,"inserted_count": number,"invalid_count": number,"not_remote_us_count": number,"not_tech_count": number,"source_id": string,"stale_count": number,"started_at": string,"status": Database["public"]['Enums']["ingestion_run_status"],"unchanged_count": number,"updated_count": number,"warnings": (string)[]
                   }
                   Insert: {
-                    "closed_count"?: number,"error"?: string | null,"fetched_count"?: number,"finished_at"?: string | null,"id"?: never,"inserted_count"?: number,"source_id": string,"started_at"?: string,"status"?: Database["public"]['Enums']["ingestion_run_status"],"updated_count"?: number
+                    "closed_count"?: number,"eligible_count"?: number,"error"?: string | null,"fetched_count"?: number,"finished_at"?: string | null,"id"?: never,"inserted_count"?: number,"invalid_count"?: number,"not_remote_us_count"?: number,"not_tech_count"?: number,"source_id": string,"stale_count"?: number,"started_at"?: string,"status"?: Database["public"]['Enums']["ingestion_run_status"],"unchanged_count"?: number,"updated_count"?: number,"warnings"?: (string)[]
                   }
                   Update: {
-                    "closed_count"?: number,"error"?: string | null,"fetched_count"?: number,"finished_at"?: string | null,"id"?: never,"inserted_count"?: number,"source_id"?: string,"started_at"?: string,"status"?: Database["public"]['Enums']["ingestion_run_status"],"updated_count"?: number
+                    "closed_count"?: number,"eligible_count"?: number,"error"?: string | null,"fetched_count"?: number,"finished_at"?: string | null,"id"?: never,"inserted_count"?: number,"invalid_count"?: number,"not_remote_us_count"?: number,"not_tech_count"?: number,"source_id"?: string,"stale_count"?: number,"started_at"?: string,"status"?: Database["public"]['Enums']["ingestion_run_status"],"unchanged_count"?: number,"updated_count"?: number,"warnings"?: (string)[]
                   }
                   Relationships: [
                     {

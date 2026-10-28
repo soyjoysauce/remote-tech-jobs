@@ -2,19 +2,19 @@
 
 One prompt per layer. Run them in order, one Claude Code session per prompt.
 
-| File | Layer | Learning-style parts (you write) |
-|---|---|---|
-| 03a-ingestion-core.md | Pipeline core + Remotive + Remote OK | dedupe key, remote-US classifier, close rule |
-| 03b-ingestion-ats.md | Company discovery + Greenhouse/Lever/Ashby + cross-source dedupe + cleanup | canonical-job selection |
-| 04-scheduled-runs.md | Hosted Supabase + GitHub Actions schedules | — |
-| 05-search-listing.md | Postgres full-text search + listing UI | search SQL function |
-| 06-job-detail-seo.md | Job pages, JSON-LD, sitemap, attribution | — |
-| 07-auth-saved-jobs.md | Supabase Auth (4 methods), allowlist, saved jobs | RLS policies |
-| 08-application-tracker.md | Application tracker | RLS policies |
-| 09-email-alerts.md | Saved searches + Resend digests | RLS policies |
-| 10-apply-kit.md | Resume parsing + tailored resume/cover letter | grounding validator, storage RLS |
-| 11-embeddings-matching.md | Voyage embeddings + pgvector + hybrid ranking | match function + rank fusion |
-| 12-deploy-hardening.md | Vercel deploy, security headers, rate limits, README | — |
+| File                      | Layer                                                                      | Learning-style parts (you write)             |
+| ------------------------- | -------------------------------------------------------------------------- | -------------------------------------------- |
+| 03a-ingestion-core.md     | Pipeline core + Remotive + Remote OK                                       | dedupe key, remote-US classifier, close rule |
+| 03b-ingestion-ats.md      | Company discovery + Greenhouse/Lever/Ashby + cross-source dedupe + cleanup | canonical-job selection                      |
+| 04-scheduled-runs.md      | Hosted Supabase + GitHub Actions schedules                                 | —                                            |
+| 05-search-listing.md      | Postgres full-text search + listing UI                                     | search SQL function                          |
+| 06-job-detail-seo.md      | Job pages, JSON-LD, sitemap, attribution                                   | —                                            |
+| 07-auth-saved-jobs.md     | Supabase Auth (4 methods), allowlist, saved jobs                           | RLS policies                                 |
+| 08-application-tracker.md | Application tracker                                                        | RLS policies                                 |
+| 09-email-alerts.md        | Saved searches + Resend digests                                            | RLS policies                                 |
+| 10-apply-kit.md           | Resume parsing + tailored resume/cover letter                              | grounding validator, storage RLS             |
+| 11-embeddings-matching.md | Voyage embeddings + pgvector + hybrid ranking                              | match function + rank fusion                 |
+| 12-deploy-hardening.md    | Vercel deploy, security headers, rate limits, README                       | —                                            |
 
 ## How to run each one
 

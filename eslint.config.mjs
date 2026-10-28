@@ -6,6 +6,44 @@ import prettier from "eslint-config-prettier/flat";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    // The secret key bypasses row level security. UI code must never reach it: a client
+    // component that imported it would ship the key to every visitor, and even a server
+    // component should act as the user, not as the system. Blocks the alias and relative paths.
+    // Everything in src/ except the server-only modules that legitimately use the key. A new
+    // folder (hooks, utils, ...) is covered automatically. A src/lib module that wraps
+    // createAdminClient must itself be added to `ignores` only if it is server-only.
+    files: ["src/**"],
+    ignores: [
+      "src/lib/supabase/admin.ts",
+      "src/lib/env.server.ts",
+      "src/lib/env.server.test.ts",
+      "src/lib/ingestion/**",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: [
+                "@/lib/supabase/admin",
+                "**/lib/supabase/admin",
+                "**/supabase/admin",
+              ],
+              message:
+                "The admin client uses the Supabase secret key, which bypasses RLS. Use it only in scripts/ and server-side src/lib code.",
+            },
+            {
+              group: ["@/lib/env.server", "**/lib/env.server", "**/env.server"],
+              message:
+                "env.server holds server-only secrets. Do not import it from UI code.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // Must stay last: turns off ESLint rules that would conflict with Prettier's formatting.
   prettier,
   // Override default ignores of eslint-config-next.

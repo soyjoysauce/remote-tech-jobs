@@ -63,17 +63,26 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Postgres only. The tests and type generation need no auth, storage or API containers.
-      - name: Start database
-        run: npx supabase db start
+      # Postgres plus the Data API (Kong gateway + PostgREST), which the integration tests call.
+      # Auth (gotrue) stays because Kong's routes include it. Everything else is skipped to keep
+      # image downloads small.
+      - name: Start database and API
+        run: npx supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
       # Applies every migration from scratch, then the seed. Fails if a migration does not apply.
-      # `db start` has already applied them once; this runs the command developers use locally.
+      # `supabase start` has already applied them once; this runs the command developers use locally.
       - name: Reset database
         run: npm run db:reset
 
       - name: Database tests
         run: npm run db:test
+
+      # The local stack's URL and secret key come from `supabase status`. They are the fixed
+      # keys of a throwaway local stack, not project secrets, and are never echoed.
+      - name: Integration tests
+        run: |
+          eval "$(npx supabase status -o env | grep -E '^(API_URL|SECRET_KEY)=')"
+          NEXT_PUBLIC_SUPABASE_URL="$API_URL" SUPABASE_SECRET_KEY="$SECRET_KEY" npm run test:integration
 
       # The committed types must match what the migrations produce.
       - name: Check generated types are current

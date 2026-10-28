@@ -12,3 +12,5 @@ One entry per significant decision. Each layer adds at least one. Copy `0000-tem
 | 0004   | [Search via Postgres FTS](0004-search-via-postgres-fts.md)                  | Accepted | 5     |
 | 0005   | [Apply flow](0005-apply-flow.md)                                            | Accepted | 10    |
 | 0006   | [Job pipeline schema](0006-job-pipeline-schema.md)                          | Accepted | 2     |
+| 0007   | [Ingestion architecture](0007-ingestion-architecture.md)                    | Accepted | 3     |
+| 0008   | [De-duplication and closing strategy](0008-dedupe-and-closing-strategy.md)  | Accepted | 3     |

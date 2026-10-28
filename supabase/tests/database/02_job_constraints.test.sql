@@ -4,7 +4,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(7);
+select plan(10);
 
 insert into public.sources (id, kind, display_name, api_base_url)
 values ('test_source', 'ats', 'Test source', 'https://example.com/api');
@@ -75,6 +75,38 @@ select lives_ok(
     values ('test_source', 'job-6', 'Acme', 'Engineer', 'https://example.com/apply/6', true, 150000)
   $$,
   'a salary with only a minimum is accepted'
+);
+
+select lives_ok(
+  $$
+    insert into public.jobs (source_id, external_id, company_name, title, apply_url, is_remote, remote_region)
+    values
+      ('test_source', 'job-7', 'Acme', 'Engineer', 'https://example.com/apply/7', true, 'us'),
+      ('test_source', 'job-8', 'Acme', 'Engineer', 'https://example.com/apply/8', true, 'north_america'),
+      ('test_source', 'job-9', 'Acme', 'Engineer', 'https://example.com/apply/9', true, 'americas'),
+      ('test_source', 'job-10', 'Acme', 'Engineer', 'https://example.com/apply/10', true, 'worldwide')
+  $$,
+  'every remote_region the classifier stores is accepted'
+);
+
+select throws_ok(
+  $$
+    insert into public.jobs (source_id, external_id, company_name, title, apply_url, is_remote, remote_region)
+    values ('test_source', 'job-11', 'Acme', 'Engineer', 'https://example.com/apply/11', true, 'non_us')
+  $$,
+  '23514',
+  null,
+  'remote_region non_us is rejected: non-US jobs are filtered out, never stored'
+);
+
+select throws_ok(
+  $$
+    insert into public.jobs (source_id, external_id, company_name, title, apply_url, is_remote, remote_region)
+    values ('test_source', 'job-12', 'Acme', 'Engineer', 'https://example.com/apply/12', true, 'us_only')
+  $$,
+  '23514',
+  null,
+  'the Layer 2 placeholder value us_only is rejected'
 );
 
 select * from finish();
